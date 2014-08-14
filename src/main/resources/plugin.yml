@@ -1,0 +1,11 @@
+name: ${project.name}
+author: khmDEV
+main: ${project.groupId}.${project.artifactId}.API
+version: ${project.version}
+commands:
+   APIUpdate:
+      permission: update.command
+      permission-message: No tienes permisos <permission>
+permissions:
+         update.command:
+                 default: op
