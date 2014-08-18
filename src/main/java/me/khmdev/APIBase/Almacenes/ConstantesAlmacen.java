@@ -11,10 +11,11 @@ public class ConstantesAlmacen {
 		mediumblob,blob,longblob,Enum,set,geomety,point,linestring,polygon,
 		multipoint,multilinestring,multipolygon,geometricol
 	}
+	public static final String tabla = "usuarios", id = "usuario";
 
 	public static final String[] sql={
-			"CREATE TABLE IF NOT EXISTS usuarios (" +
+			"CREATE TABLE IF NOT EXISTS "+tabla+" (" +
 			"usuario varchar(16) NOT NULL," +
-			"PRIMARY KEY (usuario)" +
+			"PRIMARY KEY ("+id+")" +
 			")\n" };
 }

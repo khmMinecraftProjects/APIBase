@@ -1,11 +1,11 @@
 package me.khmdev.APIBase;
 
-
 import java.util.Iterator;
 import java.util.List;
 
 import me.khmdev.APIBase.Almacenes.Central;
 import me.khmdev.APIBase.Almacenes.ConstantesAlmacen;
+import me.khmdev.APIBase.Almacenes.local.ConfigFile;
 import me.khmdev.APIBase.Almacenes.sql.AlmacenSQL;
 import me.khmdev.APIBase.Almacenes.sql.player.SQLPlayerData;
 import me.khmdev.APIBase.Auxiliar.Spamer;
@@ -13,6 +13,7 @@ import me.khmdev.APIBase.Auxiliar.Updater;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -25,28 +26,40 @@ public class API extends JavaPlugin {
 	private AlmacenSQL sql;
 	private Spamer spam;
 
-
-	
 	public void onEnable() {
 
 		sql = new AlmacenSQL(this);
-		if(sql.isEnable()){
-			for (String s : ConstantesAlmacen.sql) {
-				sql.sendUpdate(s);
+		configure();
+		if (!active) {
+			if (sql.isEnable()) {
+				for (String s : ConstantesAlmacen.sql) {
+					sql.sendUpdate(s);
+				}
+
 			}
-			
 		}
 		SQLPlayerData.init(sql);
 
 		instance = this;
 		central = new Central(this);
 
-
 		central.cargar();
 		getLogger().info("API Cargado");
-		//Updater.update(this);
+		// Updater.update(this);
 	}
 
+	public static boolean active = false;
+
+	private void configure() {
+		ConfigFile conf = new ConfigFile(getDataFolder(), "config");
+		FileConfiguration section = conf.getConfig();
+
+		if (section.isBoolean("Activado")) {
+			active = section.getBoolean("Activado");
+		}
+		section.set("Activado", true);
+		conf.saveConfig();
+	}
 
 	public Central getCentral() {
 		return central;
@@ -60,7 +73,7 @@ public class API extends JavaPlugin {
 			String[] args) {
 
 		if (cmd.getName().equalsIgnoreCase("APIUpdate")) {
-			if(args.length!=0&&args[0].equalsIgnoreCase("forzar")){
+			if (args.length != 0 && args[0].equalsIgnoreCase("forzar")) {
 				Updater.forceUpdate(sender);
 
 				return true;
@@ -69,7 +82,7 @@ public class API extends JavaPlugin {
 
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -106,7 +119,6 @@ public class API extends JavaPlugin {
 	public AlmacenSQL getSql() {
 		return sql;
 	}
-
 
 	public Spamer getSpam() {
 		return spam;
