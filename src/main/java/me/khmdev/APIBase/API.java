@@ -4,9 +4,10 @@ package me.khmdev.APIBase;
 import java.util.Iterator;
 import java.util.List;
 
-import me.khmdev.APIBase.Almacenes.AlmacenSQL;
 import me.khmdev.APIBase.Almacenes.Central;
-import me.khmdev.APIBase.Almacenes.SQLPlayerData;
+import me.khmdev.APIBase.Almacenes.ConstantesAlmacen;
+import me.khmdev.APIBase.Almacenes.sql.AlmacenSQL;
+import me.khmdev.APIBase.Almacenes.sql.player.SQLPlayerData;
 import me.khmdev.APIBase.Auxiliar.Spamer;
 import me.khmdev.APIBase.Auxiliar.Updater;
 
@@ -29,6 +30,12 @@ public class API extends JavaPlugin {
 	public void onEnable() {
 
 		sql = new AlmacenSQL(this);
+		if(sql.isEnable()){
+			for (String s : ConstantesAlmacen.sql) {
+				sql.sendUpdate(s);
+			}
+			
+		}
 		SQLPlayerData.init(sql);
 
 		instance = this;

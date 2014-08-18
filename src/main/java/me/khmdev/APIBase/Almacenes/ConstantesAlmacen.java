@@ -12,5 +12,9 @@ public class ConstantesAlmacen {
 		multipoint,multilinestring,multipolygon,geometricol
 	}
 
-	
+	public static final String[] sql={
+			"CREATE TABLE IF NOT EXISTS usuarios (" +
+			"usuario varchar(16) NOT NULL," +
+			"PRIMARY KEY (usuario)" +
+			")\n" };
 }

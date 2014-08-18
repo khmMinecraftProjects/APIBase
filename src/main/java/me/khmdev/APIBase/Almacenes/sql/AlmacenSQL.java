@@ -1,4 +1,4 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class AlmacenSQL {
 		}
 	}
 
-	private ResultSet sendQuerry(String query) {
+	public ResultSet sendQuerry(String query) {
 		if (conexion == null) {
 			return null;
 		}
@@ -33,7 +33,7 @@ public class AlmacenSQL {
 		}
 	}
 
-	private int sendUpdate(String query) {
+	public int sendUpdate(String query) {
 		if (conexion == null) {
 			return -1;
 		}
@@ -108,34 +108,43 @@ public class AlmacenSQL {
 				+ "`);") >= 0;
 	}
 
-	public boolean changeData(String table, String idname, String id,
-			String field, String edit) {
+	public boolean changeData(String table, FieldSQLChange field) {
 		if (conexion == null) {
 			return false;
 		}
+		String f = field.getWhere(), v = field.getSet();
+		if(f==""){f="1";}
 
-		return sendUpdate("UPDATE `" + table + "` SET " + field + " = " + edit
-				+ " WHERE " + idname + " = " + id + ";") >= 0;
+		return sendUpdate("UPDATE `" + table + "` SET " +v
+				+ " WHERE " +f) >= 0;
 	}
 
-	public boolean existId(String table, String idname, String id) {
+	public boolean existId(String table, FieldSQL... fields) {
 		if (conexion == null) {
 			return false;
 		}
+		String f = "";
+		for (int i = 0; i < fields.length; i++) {
+			f += "`" + fields[i].getName()
+					+ "` LIKE  '" + fields[i].getData() + "'";
+			if (i + 1 < fields.length) {
+				f += ",";
+			}
+		}
+		if(f==""){f="1";}
 
 		try {
 
 			return sendQuerry(
-					"SELECT * FROM  `" + table + "` WHERE  `" + idname
-							+ "` LIKE  '" + id + "'").next();
+					"SELECT * FROM  `" + table + "` WHERE  " +f).next();
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public boolean createField(String tab, FieldSQL... fields) {
+	public int createField(String tab, FieldSQL... fields) {
 		if (conexion == null) {
-			return false;
+			return -1;
 		}
 
 		String f = "", v = "";
@@ -148,26 +157,42 @@ public class AlmacenSQL {
 			}
 		}
 		
-		sendUpdate("INSERT INTO  `" + tab + "` (" + f + ")" + "VALUES (" + v
-				+ ");");
-		return true;
+		return sendUpdate("INSERT INTO  `" + tab + "` (" + f + ")" 
+				+ "VALUES (" + v+ ");");
 	}
 
-	public ResultSet getValue(String table, String idname, String id) {
+	public ResultSet getValue(String table, FieldSQL... fields) {
+		if (conexion == null) {
+			return null;
+		}
+		String f = "";
+		for (int i = 0; i < fields.length; i++) {
+			f += "`" + fields[i].getName()
+					+ "` LIKE  '" + fields[i].getData() + "'";
+			if (i + 1 < fields.length) {
+				f += ",";
+			}
+		}
+		if(f==""){f="1";}
+		return sendQuerry("SELECT * FROM  `" + table + "` WHERE  "+f);
+	}
+	public ResultSet getValue(String value,String table, FieldSQL... fields) {
 		if (conexion == null) {
 			return null;
 		}
 
-		return sendQuerry("SELECT * FROM  `" + table + "` WHERE  `" + idname
-				+ "` LIKE  '" + id + "'");
-	}
-	public ResultSet getValue(String value,String table, String idname, String id) {
-		if (conexion == null) {
-			return null;
+		String f = "";
+		for (int i = 0; i < fields.length; i++) {
+			f += "`" + fields[i].getName()
+					+ "` LIKE  '" + fields[i].getData() + "'";
+			if (i + 1 < fields.length) {
+				f += ",";
+			}
 		}
+		if(f==""){f="1";}
 
-		return sendQuerry("SELECT `"+value+"` FROM  `" + table + "` WHERE  `" + idname
-				+ "` LIKE  '" + id + "'");
+		return sendQuerry("SELECT `"+value+"` FROM  `" +table 
+				+ "` WHERE  "+f);
 	}
 	public boolean isEnable() {
 		return enable;

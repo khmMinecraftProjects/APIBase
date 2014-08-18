@@ -1,4 +1,4 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.local;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
 
+import me.khmdev.APIBase.Almacenes.Almacen;
+import me.khmdev.APIBase.Almacenes.Datos;
 import me.khmdev.APIBase.Auxiliar.Auxiliar;
 import me.khmdev.APIBase.nbt.CompressedStreamTools;
 import me.khmdev.APIBase.nbt.NBTBase;

@@ -1,4 +1,4 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.sql;
 
 import me.khmdev.APIBase.Almacenes.ConstantesAlmacen.typeVar;
 

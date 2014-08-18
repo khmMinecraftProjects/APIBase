@@ -1,4 +1,4 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.local;
 
 import java.util.Hashtable;
 

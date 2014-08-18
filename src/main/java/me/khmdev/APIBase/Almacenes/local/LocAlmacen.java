@@ -1,9 +1,10 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.local;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import me.khmdev.APIBase.API;
+import me.khmdev.APIBase.Almacenes.Almacen;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

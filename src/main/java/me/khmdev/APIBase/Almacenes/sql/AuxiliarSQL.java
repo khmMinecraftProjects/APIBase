@@ -1,9 +1,10 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 import me.khmdev.APIBase.API;
+import me.khmdev.APIBase.Almacenes.local.ConfigFile;
 import me.khmdev.APIBase.Auxiliar.Auxiliar;
 
 import org.bukkit.configuration.ConfigurationSection;

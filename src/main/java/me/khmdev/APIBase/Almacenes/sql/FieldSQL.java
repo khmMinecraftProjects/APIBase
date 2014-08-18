@@ -1,8 +1,8 @@
-package me.khmdev.APIBase.Almacenes;
+package me.khmdev.APIBase.Almacenes.sql;
 
 public class FieldSQL {
-	private String name;
-	private Object data;
+	protected String name;
+	protected Object data;
 	public FieldSQL(String nam,Object dat){
 		data=(dat);
 		name=(nam);
