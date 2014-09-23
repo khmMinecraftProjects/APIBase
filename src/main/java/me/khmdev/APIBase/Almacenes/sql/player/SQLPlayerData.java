@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import me.khmdev.APIBase.Almacenes.ConstantesAlmacen;
 import me.khmdev.APIBase.Almacenes.ConstantesAlmacen.typeVar;
 import me.khmdev.APIBase.Almacenes.sql.AlmacenSQL;
+import me.khmdev.APIBase.Almacenes.sql.Consulta;
 import me.khmdev.APIBase.Almacenes.sql.FieldSQL;
 import me.khmdev.APIBase.Almacenes.sql.FieldSQLChange;
 import me.khmdev.APIBase.Almacenes.sql.varSQL;
@@ -24,13 +25,13 @@ public class SQLPlayerData {
 		return sql.anadirColumnas(ConstantesAlmacen.tabla, vars);
 	}
 
-	public static ResultSet getPlayer(String pl) {
+	public static Consulta getPlayer(String pl) {
 
 		return sql.getValue(ConstantesAlmacen.tabla, new FieldSQL(ConstantesAlmacen.id, pl));
 
 	}
 
-	public static ResultSet getPlayerValue(String pl, String value) {
+	public static Consulta getPlayerValue(String pl, String value) {
 
 		return sql.getValue(value, ConstantesAlmacen.tabla, new FieldSQL(ConstantesAlmacen.id, pl));
 

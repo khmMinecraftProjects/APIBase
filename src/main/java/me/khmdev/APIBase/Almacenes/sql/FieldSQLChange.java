@@ -41,7 +41,7 @@ public class FieldSQLChange {
 		String f = "";
 		for (int i = 0; i < where.length; i++) {
 			f += "`" + where[i].getName()
-					+ "` LIKE  '" + where[i].getData() + "'";
+					+ "` =  '" + where[i].getData() + "'";
 			if (i + 1 < where.length) {
 				f += ",";
 			}

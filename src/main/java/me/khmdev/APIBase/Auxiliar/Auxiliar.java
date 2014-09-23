@@ -17,15 +17,7 @@ public class Auxiliar {
 		}
 
 	}
-	public static boolean hasPluging(String s) {
-		try {
-			Class.forName(s);
-			return true;
-		} catch (Exception e) {
 
-		}
-		return false;
-	}
 	public static double getDouble(String s, int defaul) {
 		try {
 

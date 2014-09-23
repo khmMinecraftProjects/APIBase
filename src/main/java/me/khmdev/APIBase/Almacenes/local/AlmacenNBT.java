@@ -5,18 +5,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
 
+import org.bukkit.Bukkit;
+
 import me.khmdev.APIBase.Almacenes.Almacen;
 import me.khmdev.APIBase.Almacenes.Datos;
+import me.khmdev.APIBase.Almacenes.local.nbt.CompressedStreamTools;
+import me.khmdev.APIBase.Almacenes.local.nbt.NBTBase;
+import me.khmdev.APIBase.Almacenes.local.nbt.NBTTagCompound;
 import me.khmdev.APIBase.Auxiliar.Auxiliar;
-import me.khmdev.APIBase.nbt.CompressedStreamTools;
-import me.khmdev.APIBase.nbt.NBTBase;
-import me.khmdev.APIBase.nbt.NBTTagCompound;
 
 public class AlmacenNBT implements Almacen {
 
@@ -75,27 +75,70 @@ public class AlmacenNBT implements Almacen {
 
 	@Override
 	public void iniciar() {
+
 		File f = new File(name);
-		if (f.isFile()) {
+		String other = name;
+		File backup = new File(other.replace(".dat", "_backup.dat"));
+		if (backup.exists() && backup.isFile()) {
+			if (f.exists() && f.isFile()) {
+				f.delete();
+			}
+			backup.renameTo(f);
+			f=new File(name);
+		}
+		if (f.exists()&&f.isFile()) {
 
 			FileInputStream in;
 			try {
-				in = new FileInputStream(name);
+				in = new FileInputStream(f);
 				nbt = CompressedStreamTools.readCompressed(in);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				return;
+			} catch (Exception e) {
+				Bukkit.getLogger()
+				.severe("Error al cargar datos de \n"+
+							name);
 			}
-
+			
+			
+			File f2= new File(name.replace(".dat", "_2.dat"));
+			if(f2.exists()){
+				f2.renameTo(f);
+				try {
+					
+					in = new FileInputStream(f);
+					nbt = CompressedStreamTools.readCompressed(in);
+				} catch (IOException e) {
+					Bukkit.getLogger()
+					.severe("Error al cargar Backup datos de \n"+
+								name);
+				}
+			}else{
+				f.delete();
+				try {
+					f.createNewFile();
+					nbt = new NBTTagCompound();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
 		} else {
 			nbt = new NBTTagCompound();
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void backup() {
-		File f = new File(name);
+		File f = new File(name),
+				f2= new File(name.replace(".dat", "_2.dat"));
+		if(f2.exists()&&f2.isFile()){
+			f2.delete();try {
+				f2.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		f.renameTo(f);
+		/*
 		String ruta = f.getAbsolutePath().substring(0,
 				f.getAbsolutePath().length() - f.getName().length());
 
@@ -108,6 +151,10 @@ public class AlmacenNBT implements Almacen {
 				if (!new File(ruta + File.separator + "backup_2").exists()) {
 					new File(ruta + File.separator + "backup_2").mkdir();
 				} else {
+					for (File fd : new File(ruta + File.separator + "backup_2")
+							.listFiles()) {
+						fd.delete();
+					}
 					new File(ruta + File.separator + "backup_2").delete();
 					// FileUtils.deleteDirectory(new
 					// File(ruta+File.separator+"backup_2"));
@@ -123,16 +170,17 @@ public class AlmacenNBT implements Almacen {
 			}
 		}
 		Date time = Calendar.getInstance().getTime();
-
 		f2 = new File(ruta + File.separator + "backup" + File.separator
 				+ time.getDay() + "_" + time.getHours() + "_"
-				+ time.getMinutes());
+				+ time.getMinutes() + ".dat");
 		if (f2.exists()) {
-			f2 = new File(f2.getAbsoluteFile() + "_" + time.getSeconds());
+			f2 = new File(ruta + File.separator + "backup" + File.separator
+					+ time.getDay() + "_" + time.getHours() + "_"
+					+ time.getMinutes() + "_" + time.getSeconds() + ".dat");
 		}
 		if (f.exists()) {
 			f.renameTo(f2);
-		}
+		}*/
 
 	}
 
@@ -143,30 +191,35 @@ public class AlmacenNBT implements Almacen {
 
 	@Override
 	public void finalizar() {
-		backup();
 
-		FileOutputStream out;
+		FileOutputStream out = null;
+		File file = null;
 		try {
-			File file = new File(name);
-			File despk =file.getParentFile();
+			file = new File(name + "_tmp");
+			File despk = file.getParentFile();
 
-			if(!despk.exists()){
+			if (!despk.exists()) {
 				despk.mkdirs();
 			}
-			if(!file.exists()) {
+			if (!file.exists()) {
 				file.createNewFile();
-			} 
-			out = new FileOutputStream(name);
+			}
+		
+			out = new FileOutputStream(name + "_tmp");
 			CompressedStreamTools.writeCompressed(nbt, out);
 			out.flush();
 			out.close();
+			backup();
+			file.renameTo(new File(name));
+			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	@Override
