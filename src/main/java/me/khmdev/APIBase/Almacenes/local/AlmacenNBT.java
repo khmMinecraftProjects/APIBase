@@ -127,62 +127,6 @@ public class AlmacenNBT implements Almacen {
 		}
 	}
 
-	private void backup() {
-		File f = new File(name),
-				f2= new File(name.replace(".dat", "_2.dat"));
-		if(f2.exists()&&f2.isFile()){
-			f2.delete();try {
-				f2.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		f.renameTo(f);
-		/*
-		String ruta = f.getAbsolutePath().substring(0,
-				f.getAbsolutePath().length() - f.getName().length());
-
-		File f2 = new File(ruta + File.separator + "backup");
-
-		if (!f2.exists()) {
-			f2.mkdir();
-		} else {
-			if (f2.list().length > 10) {
-				if (!new File(ruta + File.separator + "backup_2").exists()) {
-					new File(ruta + File.separator + "backup_2").mkdir();
-				} else {
-					for (File fd : new File(ruta + File.separator + "backup_2")
-							.listFiles()) {
-						fd.delete();
-					}
-					new File(ruta + File.separator + "backup_2").delete();
-					// FileUtils.deleteDirectory(new
-					// File(ruta+File.separator+"backup_2"));
-
-					new File(ruta + File.separator + "backup_2").mkdir();
-				}
-				for (String p : f2.list()) {
-					new File(ruta + File.separator + "backup" + File.separator
-							+ p).renameTo(new File(ruta + File.separator
-							+ "backup_2" + File.separator + p));
-
-				}
-			}
-		}
-		Date time = Calendar.getInstance().getTime();
-		f2 = new File(ruta + File.separator + "backup" + File.separator
-				+ time.getDay() + "_" + time.getHours() + "_"
-				+ time.getMinutes() + ".dat");
-		if (f2.exists()) {
-			f2 = new File(ruta + File.separator + "backup" + File.separator
-					+ time.getDay() + "_" + time.getHours() + "_"
-					+ time.getMinutes() + "_" + time.getSeconds() + ".dat");
-		}
-		if (f.exists()) {
-			f.renameTo(f2);
-		}*/
-
-	}
 
 	@Override
 	public String toString() {
@@ -195,7 +139,7 @@ public class AlmacenNBT implements Almacen {
 		FileOutputStream out = null;
 		File file = null;
 		try {
-			file = new File(name + "_tmp");
+			file = new File(name.replace(".dat", "_tmp.dat"));
 			File despk = file.getParentFile();
 
 			if (!despk.exists()) {
@@ -205,11 +149,18 @@ public class AlmacenNBT implements Almacen {
 				file.createNewFile();
 			}
 		
-			out = new FileOutputStream(name + "_tmp");
+			out = new FileOutputStream(name.replace(".dat", "_tmp.dat"));
 			CompressedStreamTools.writeCompressed(nbt, out);
 			out.flush();
 			out.close();
-			backup();
+			
+			File f = new File(name),
+					f2= new File(name.replace(".dat", "_2.dat"));
+			if(f2.exists()&&f2.isFile()){
+				f2.delete();
+			}
+			f.renameTo(f2);
+			
 			file.renameTo(new File(name));
 			
 		} catch (FileNotFoundException e) {
@@ -397,7 +348,6 @@ public class AlmacenNBT implements Almacen {
 	@Override
 	public void clear() {
 		nbt.clear();
-
 	}
 
 }
