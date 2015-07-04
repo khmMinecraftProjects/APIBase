@@ -10,6 +10,7 @@ import me.khmdev.APIBase.Almacenes.sql.AlmacenSQL;
 import me.khmdev.APIBase.Almacenes.sql.player.SQLPlayerData;
 import me.khmdev.APIBase.Auxiliar.Spamer;
 import me.khmdev.APIBase.Auxiliar.Updater;
+import me.khmdev.APIBase.lang.Lang;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,7 +28,7 @@ public class API extends JavaPlugin {
 	private Spamer spam;
 
 	public void onEnable() {
-
+		Lang.init(this);
 		sql = new AlmacenSQL(this);
 		configure();
 		if (!active) {

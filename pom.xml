@@ -16,14 +16,22 @@
 
 
 
-
-	<!-- Repositories -->
-	<repositories>
+<!-- Repositories -->
+	<repositories>	
 		<repository>
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public</url>
 		</repository>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>Craftbukkit-repo</id>
+			<url>http://maven.elmakers.com/repository/</url>
+		</repository>
 	</repositories>
+	
 	<!-- Dependencies -->
 	<dependencies>
 		<dependency>
